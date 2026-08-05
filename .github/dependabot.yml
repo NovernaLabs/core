@@ -17,7 +17,6 @@ updates:
       prefix-development: "chore(deps-dev)"
     labels:
       - "type: dependencies"
-      - "no-changeset"
     groups:
       types:
         patterns: ["@types/*"]
@@ -52,7 +51,6 @@ updates:
     labels:
       - "type: dependencies"
       - "area: ci"
-      - "no-changeset"
     groups:
       actions:
         patterns: ["*"]

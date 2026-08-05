@@ -59,9 +59,6 @@
 - name: "breaking"
   color: "b60205"
   description: Contains a breaking change
-- name: "no-changeset"
-  color: "ededed"
-  description: Intentionally has no changeset
 - name: "release"
   color: "0e8a16"
   description: Release automation

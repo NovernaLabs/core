@@ -1,9 +1,14 @@
 name: Release
 
+# Publishing is a deliberate act, not a side effect of merging. Trigger this by hand
+# from the Actions tab once the versions in package.json are what you want them to be.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Build, test and pack everything, but do not publish to npm.
+        type: boolean
+        default: true
 
 concurrency:
   group: release-${{ github.ref }}
@@ -14,22 +19,27 @@ permissions:
 
 jobs:
   release:
-    name: Version or publish
+    name: Publish
     runs-on: ubuntu-latest
-    # `id-token: write` is what makes npm provenance work  consumers can verify
+    # `id-token: write` is what makes npm provenance work, consumers can verify
     # the tarball was built by this workflow from this commit.
     permissions:
-      contents: write
-      pull-requests: write
+      contents: read
       id-token: write
     outputs:
-      published: ${{ steps.changesets.outputs.published }}
+      published: ${{ steps.publish.outputs.published }}
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - uses: ./.github/actions/setup
+
+      # The shared setup action does not point npm at a registry, and without one
+      # NODE_AUTH_TOKEN is never written into .npmrc.
+      - name: Configure npm registry
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          registry-url: https://registry.npmjs.org
 
       - name: Build publishable packages
         run: pnpm build:packages
@@ -37,30 +47,29 @@ jobs:
       - name: Run tests before publishing
         run: pnpm turbo run test
 
-      - name: Create release PR or publish
-        id: changesets
-        uses: changesets/action@v1
-        with:
-          version: pnpm changeset:version
-          publish: pnpm changeset:publish
-          commit: "chore(release): version packages"
-          title: "chore(release): version packages"
-          createGithubReleases: true
+      - name: Publish
+        id: publish
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            pnpm --recursive --filter "./main" --filter "./packages/*" \
+              publish --access public --no-git-checks --dry-run
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          else
+            pnpm --recursive --filter "./main" --filter "./packages/*" \
+              publish --access public --no-git-checks
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: "true"
 
       - name: Summary
         run: |
-          if [ "${{ steps.changesets.outputs.published }}" = "true" ]; then
+          if [ "${{ steps.publish.outputs.published }}" = "true" ]; then
             echo "### Published" >> "$GITHUB_STEP_SUMMARY"
-            echo '```json' >> "$GITHUB_STEP_SUMMARY"
-            echo '${{ steps.changesets.outputs.publishedPackages }}' >> "$GITHUB_STEP_SUMMARY"
-            echo '```' >> "$GITHUB_STEP_SUMMARY"
+            echo "See https://github.com/${{ github.repository }}/releases" >> "$GITHUB_STEP_SUMMARY"
           else
-            echo "No packages published  release PR is open or up to date." >> "$GITHUB_STEP_SUMMARY"
+            echo "Dry run only, nothing was published." >> "$GITHUB_STEP_SUMMARY"
           fi
 
   announce:

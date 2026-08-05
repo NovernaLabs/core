@@ -3,8 +3,8 @@
 | Workflow                           | Trigger                         | What it does                                                          |
 | ---------------------------------- | ------------------------------- | --------------------------------------------------------------------- |
 | [`ci.yml`](./ci.yml)               | PR, push to `main`, merge queue | Lint, typecheck, test, build, boundary checks, publish dry run        |
-| [`pr-checks.yml`](./pr-checks.yml) | PR                              | Conventional title, changeset presence, bundle size report            |
-| [`release.yml`](./release.yml)     | push to `main`                  | Keeps the "Version Packages" PR open; publishes to npm when it merges |
+| [`pr-checks.yml`](./pr-checks.yml) | PR                              | Conventional title, bundle size report                                |
+| [`release.yml`](./release.yml)     | manual                          | Builds, tests and publishes to npm. Defaults to a dry run             |
 | [`codeql.yml`](./codeql.yml)       | PR, push, weekly                | Static security analysis for TS and for the workflows themselves      |
 | [`labeler.yml`](./labeler.yml)     | PR                              | Applies `area: *` labels from the changed paths                       |
 | [`stale.yml`](./stale.yml)         | daily                           | Closes abandoned issues and PRs                                       |
@@ -26,14 +26,14 @@ Do these once, before the first release.
 
 - **Workflow permissions:** *Read repository contents and packages permissions*. Every
   workflow that needs more asks for it explicitly in its `permissions:` block.
-- Enable **"Allow GitHub Actions to create and approve pull requests"** - the Changesets
-  action needs it to open the release PR.
+- Releases are triggered by hand from the Actions tab. Bump the versions in the package
+  manifests first, then run **Release** with `dry_run` unchecked.
 
 ### Branch protection on `main`
 
 - Require a pull request, **1 approval**, and review from **Code Owners**
 - Required status checks: **`CI`** (the aggregate job in `ci.yml`),
-  **`Conventional PR title`**, **`Changeset present`**
+  **`Conventional PR title`**
 - Require branches to be up to date before merging
 - Require conversation resolution before merging
 - **Allow squash merging only** - disable merge commits and rebase merging
