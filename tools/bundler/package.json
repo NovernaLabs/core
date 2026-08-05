@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "magic-string": "catalog:",
     "rolldown": "catalog:",
     "tsdown": "catalog:"
   },
