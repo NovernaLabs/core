@@ -8,11 +8,7 @@ const violations = [];
 const workspaces = new Map();
 
 for await (const entry of glob(
-  [
-    'main/package.json',
-    'packages/*/package.json',
-    'internal/*/package.json',
-  ],
+  ['main/package.json', 'packages/*/package.json', 'internal/*/package.json'],
   { cwd: ROOT },
 )) {
   const pkg = JSON.parse(await readFile(entry, 'utf8'));
