@@ -177,31 +177,31 @@ export {
 } from './modules/module.metadata';
 export { ModuleRef, ModuleRegistry } from './modules/module.registry';
 // Persistence - is in the works
-// export {
-//   persistenceConformance,
-//   runConformance,
-//   type AdapterTestCase,
-//   type ConformanceContext,
-//   type ConformanceRecord,
-//   type ConformanceResult,
-// } from "./persistence/conformance";
-// export { withMainThreadResume } from "./persistence/main-thread";
-// export {
-//   MemoryAdapter,
-//   type MemoryAdapterOptions,
-// } from "./persistence/memory-adapter";
-// export {
-//   PersistenceAdapter,
-//   type FindQuery,
-//   type OrderBy,
-//   type PersistenceCapabilities,
-//   type Repository,
-//   type RepositoryOptions,
-//   type SortDirection,
-//   type TransactionContext,
-//   type Where,
-// } from "./persistence/port";
-// export { repositoryProvider } from "./persistence/repository-provider";
+export {
+  type AdapterTestCase,
+  type ConformanceContext,
+  type ConformanceRecord,
+  type ConformanceResult,
+  persistenceConformance,
+  runConformance,
+} from './persistence/conformance';
+export { withMainThreadResume } from './persistence/main.thread';
+export {
+  MemoryAdapter,
+  type MemoryAdapterOptions,
+} from './persistence/memory.adapter';
+export {
+  type FindQuery,
+  type OrderBy,
+  PersistenceAdapter,
+  type PersistenceCapabilities,
+  type Repository,
+  type RepositoryOptions,
+  type SortDirection,
+  type TransactionContext,
+  type Where,
+} from './persistence/port';
+export { repositoryProvider } from './persistence/repository.provider';
 // Player
 export {
   isPlayerClass,
