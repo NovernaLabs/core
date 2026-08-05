@@ -1,14 +1,9 @@
-//!
-//! Important Note:
-//! Since the Metrics and Error Handling is Bound to our private Framework and Custom Watcher (Our Plattform for Metrics&Errors)
-//! We need to Create a new Way of Handling them, maybe just store them in Memory (But then they will only be there per session, and not Persistent)
-//!
-
 import type { Ctor, Dict, Token } from '../../shared';
 import type { Container } from '../di/container';
 import type { ExceptionHandler, ExceptionOutcome } from '../errors/exception.handler';
 import { ForbiddenException } from '../errors/exceptions';
 import type { Logger } from '../logging/logger';
+import type { MetricsProvider } from '../metrics/metrics';
 import type { ModuleRef } from '../modules/module-registry';
 import { playerTokenChain, type SharedPlayer } from '../player/shared.player';
 import {
@@ -94,6 +89,7 @@ export interface Invocation {
 export interface PipelineDependencies {
   rootContainer: Container;
   logger: Logger;
+  metrics: MetricsProvider;
   exceptions: ExceptionHandler;
   mainThread: MainThreadScheduler;
   playerResolver?: PlayerResolver | undefined;
@@ -140,7 +136,7 @@ export class ExecutionPipeline {
 
   public async dispatch(binding: HandlerBinding, invocation: Invocation): Promise<DispatchResult> {
     const scope = binding.moduleRef.container.createScope(`${invocation.type}:${invocation.name}`);
-    // const started = Date.now();
+    const started = Date.now();
     let context: ExecutionContext | undefined;
 
     try {
@@ -161,31 +157,27 @@ export class ExecutionPipeline {
       });
 
       this.#seedScope(scope, context, player, invocation.source);
-      // @TODO: @Code-Pumba Need to be adressed later.
-      //   this.deps.metrics.counter("handler.invocations", 1, {
-      //     transport: invocation.type,
-      //     handler: binding.id,
-      //   });
+      this.deps.metrics.counter('handler.invocations', 1, {
+        transport: invocation.type,
+        handler: binding.id,
+      });
 
       const value = await this.#run(binding, context, invocation, scope);
-      // @TODO: @Code-Pumba Need to be adressed later.
-      //   this.deps.metrics.counter("handler.success", 1, {
-      //     transport: invocation.type,
-      //     handler: binding.id,
-      //   });
+      this.deps.metrics.counter('handler.success', 1, {
+        transport: invocation.type,
+        handler: binding.id,
+      });
       return { ok: true, value };
     } catch (error) {
-      // @TODO: @Code-Pumba Need to be adressed later.
       const reportingContext = context ?? this.#fallbackContext(binding, invocation, scope);
 
       const outcome = await this.deps.exceptions.handle(error, reportingContext);
       return { ok: false, outcome };
     } finally {
-      // @TODO: @Code-Pumba Need to be adressed later.
-      //   this.deps.metrics.histogram("handler.duration", Date.now() - started, {
-      //     transport: invocation.type,
-      //     handler: binding.id,
-      //   });
+      this.deps.metrics.histogram('handler.duration', Date.now() - started, {
+        transport: invocation.type,
+        handler: binding.id,
+      });
       await scope.dispose();
     }
   }

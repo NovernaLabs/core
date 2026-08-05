@@ -2,6 +2,7 @@ import type { Ctor } from '../../shared';
 import type { ExceptionFilter } from '../execution/contracts';
 import { type ExecutionContext, ExecutionType } from '../execution/execution.context';
 import type { Logger } from '../logging/logger';
+import type { MetricsProvider } from '../metrics/metrics';
 import { ForbiddenException, HttpException, ValidationException } from './exceptions';
 
 export interface ExceptionOutcome {
@@ -17,7 +18,7 @@ export class ExceptionHandler {
 
   public constructor(
     private readonly logger: Logger,
-    // private readonly metrics: MetricsProvider, //@TODO @Code-Pumba - No Metrics Provider for now,
+    private readonly metrics: MetricsProvider,
   ) {}
 
   public register(filter: ExceptionFilter): this {
@@ -28,11 +29,10 @@ export class ExceptionHandler {
   public async handle(error: unknown, context: ExecutionContext): Promise<ExceptionOutcome> {
     const status = statusFor(error);
     const message = messageFor(error);
-    //@TODO @Code-Pumba - No Metrics Provider for now,
-    // this.metrics.counter("handler.errors", 1, {
-    //   transport: context.type,
-    //   handler: `${context.target.name}.${context.handlerName}`,
-    // });
+    this.metrics.counter('handler.errors', 1, {
+      transport: context.type,
+      handler: `${context.target.name}.${context.handlerName}`,
+    });
 
     for (const filter of this.#filters) {
       if (filter.catches && !(error instanceof filter.catches)) continue;
