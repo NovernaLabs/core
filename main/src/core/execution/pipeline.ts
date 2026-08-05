@@ -6,6 +6,7 @@
 
 import type { Ctor, Dict, Token } from '../../shared';
 import type { Container } from '../di/container';
+import type { ExceptionHandler, ExceptionOutcome } from '../errors/exception.handler';
 import { ForbiddenException } from '../errors/exceptions';
 import type { Logger } from '../logging/logger';
 import type { ModuleRef } from '../modules/module-registry';
@@ -93,7 +94,7 @@ export interface Invocation {
 export interface PipelineDependencies {
   rootContainer: Container;
   logger: Logger;
-  //   exceptions: ExceptionHandler; // @TODO: @Code-Pumba Need to be adressed later.
+  exceptions: ExceptionHandler;
   mainThread: MainThreadScheduler;
   playerResolver?: PlayerResolver | undefined;
 }
@@ -101,7 +102,7 @@ export interface PipelineDependencies {
 export interface DispatchResult {
   ok: boolean;
   value?: unknown;
-  //   outcome?: ExceptionOutcome; // @TODO: @Code-Pumba Need to be adressed later.
+  outcome?: ExceptionOutcome;
 }
 
 export class ExecutionPipeline {
@@ -173,17 +174,12 @@ export class ExecutionPipeline {
       //     handler: binding.id,
       //   });
       return { ok: true, value };
-    } catch {
+    } catch (error) {
       // @TODO: @Code-Pumba Need to be adressed later.
-      //   const reportingContext =
-      //     context ?? this.#fallbackContext(binding, invocation, scope);
-      //
-      //   const outcome = await this.deps.exceptions.handle(
-      //     error,
-      //     reportingContext,
-      //   );
-      //   return { ok: false, outcome };
-      return { ok: false };
+      const reportingContext = context ?? this.#fallbackContext(binding, invocation, scope);
+
+      const outcome = await this.deps.exceptions.handle(error, reportingContext);
+      return { ok: false, outcome };
     } finally {
       // @TODO: @Code-Pumba Need to be adressed later.
       //   this.deps.metrics.histogram("handler.duration", Date.now() - started, {
