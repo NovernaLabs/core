@@ -4,7 +4,7 @@ import type { ExceptionHandler, ExceptionOutcome } from '../errors/exception.han
 import { ForbiddenException } from '../errors/exceptions';
 import type { Logger } from '../logging/logger';
 import type { MetricsProvider } from '../metrics/metrics';
-import type { ModuleRef } from '../modules/module-registry';
+import type { ModuleRef } from '../modules/module.registry';
 import { playerTokenChain, type SharedPlayer } from '../player/shared.player';
 import {
   CURRENT_PLAYER,
