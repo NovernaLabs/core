@@ -53,8 +53,6 @@ export class Container {
     if (parent) parent.#children.add(this);
   }
 
-  // ── Registration ───────────────────────────────────────────────────────────────────────
-
   public register(provider: Provider): this {
     const binding = normalizeProvider(provider);
     this.#bindings.set(binding.token, binding);
