@@ -1,0 +1,31 @@
+{
+  "//": [
+    "The cfx-server build the dev harness runs on, pinned on purpose.",
+    "",
+    "FiveM Enhanced replaced the old artifact server: builds no longer have an incrementing",
+    "number on runtime.fivem.net, they are published under an opaque release id on",
+    "downloads.cfx-services.net, and the executable was renamed FXServer -> cfx-server.",
+    "There is no 'latest' URL to follow, so both platforms are pinned by hand.",
+    "",
+    "The two ids differ per platform but come from the same release — their UUIDv7 prefix",
+    "decodes to the timestamp in `released`.",
+    "",
+    "Bumping this is a deliberate PR, and it is when the @citizenfx/* typings in",
+    "pnpm-workspace.yaml get bumped too. See https://docs.fivem.net/docs/developers/legacy-vs-enhanced/"
+  ],
+  "released": "2026-08-03T13:45:00Z",
+  "builds": {
+    "windows": {
+      "id": "019fc7df-8e79-73c1-8467-f444ab5fcadf",
+      "url": "https://downloads.cfx-services.net/prod/019fc7df-8e79-73c1-8467-f444ab5fcadf/cfx-server_win_x64.zip",
+      "archive": "cfx-server_win_x64.zip",
+      "executable": "cfx-server.exe"
+    },
+    "linux": {
+      "id": "019fc7df-a2ad-76aa-866a-92f4c228ef7b",
+      "url": "https://downloads.cfx-services.net/prod/019fc7df-a2ad-76aa-866a-92f4c228ef7b/cfx-server_linux_x64.tar.xz",
+      "archive": "cfx-server_linux_x64.tar.xz",
+      "executable": "cfx-server"
+    }
+  }
+}

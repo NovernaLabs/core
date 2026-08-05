@@ -1,0 +1,7 @@
+{
+  "extends": "@noverna/tsconfig/library.json",
+  "compilerOptions": {
+    "types": ["node", "@citizenfx/client", "@citizenfx/server"]
+  },
+  "include": ["src/**/*.ts", "tsdown.config.ts"]
+}

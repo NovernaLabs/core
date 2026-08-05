@@ -1,0 +1,73 @@
+{
+  "name": "@noverna/core",
+  "version": "0.0.0",
+  "description": "A TypeScript-first framework for FiveM Enhanced, typed events, DI, and swappable persistence.",
+  "keywords": [
+    "fivem",
+    "fivem-enhanced",
+    "cfx",
+    "gta5",
+    "framework",
+    "typescript"
+  ],
+  "license": "MIT",
+  "author": "Noverna Labs",
+  "homepage": "https://github.com/novernalabs/core/tree/main/main#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novernalabs/core.git",
+    "directory": "main"
+  },
+  "bugs": {
+    "url": "https://github.com/novernalabs/core/issues"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./client": {
+      "types": "./dist/client/index.d.ts",
+      "default": "./dist/client/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
+    "./shared": {
+      "types": "./dist/shared/index.d.ts",
+      "default": "./dist/shared/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "engines": {
+    "node": ">=26.0.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "devDependencies": {
+    "@citizenfx/client": "catalog:",
+    "@citizenfx/server": "catalog:",
+    "@noverna/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}

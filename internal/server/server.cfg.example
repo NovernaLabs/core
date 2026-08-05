@@ -1,0 +1,48 @@
+# Local development server. Copied to server.cfg by `pnpm server:setup`.
+# server.cfg is gitignored — put your licence key there, never in this file.
+
+endpoint_add_tcp "0.0.0.0:30120"
+endpoint_add_udp "0.0.0.0:30120"
+
+# ASCII only. FXServer's config tokenizer counts bytes, not characters, and a multi-byte
+# character truncates the value: an em dash here produced "could not be fully tokenized".
+sv_hostname "Noverna Framework - dev"
+sv_maxclients 8
+sv_scriptHookAllowed 0
+
+# From https://keymaster.fivem.net. Required, even locally.
+sv_licenseKey "REPLACE_ME"
+
+# FXServer only ever scans <server data>/resources — there is no config option for an extra
+# path, and symlinks are not an option either. `pnpm server:dev` therefore mirrors the built
+# resource into resources/[local]/ and keeps mirroring it while it watches, so a rebuild is
+# one `restart test-resource` away in the console.
+#
+# Folders in [brackets] are categories, not resources; the resource is the folder inside it.
+# The resource name is that *directory* name, not the `name` field in fxmanifest.lua.
+ensure test-resource
+
+# ── FiveM Enhanced ───────────────────────────────────────────────────────────────────────
+# https://docs.fivem.net/docs/developers/legacy-vs-enhanced/
+
+# Sync thread tick rate, 1-120. Replaces the deprecated `sv_useAccurateSends`, which set
+# this implicitly — Enhanced wants it stated outright.
+sv_syncTickRate 60
+
+# How long a client may take to pull a single resource file over HTTP. The default is two
+# minutes; a local server never needs anywhere near that, and a low value surfaces a broken
+# bundle as a fast failure instead of a two-minute hang.
+sv_resourceFileDownloadTimeout 30
+
+# ── Convenience ──────────────────────────────────────────────────────────────────────────
+
+# The framework reads these convars — see resolveLogLevel()/resolveLogColors() in
+# @noverna/core/server.
+#
+# trace | debug | info | warn | error | fatal
+set noverna_log_level "debug"
+
+# ANSI colour in the console. The framework writes through process.stdout, which bypasses the
+# Cfx console's `^1` parser entirely, so it emits real ANSI escapes instead. Set this to "0"
+# if your console renders them as garbage rather than as colour.
+set noverna_log_colors "1"

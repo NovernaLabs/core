@@ -44,6 +44,9 @@ internal/server/server.cfg
 !internal/server/server.cfg.example
 *.fxserver.log
 citizen-server-impl.log
+local-database/
+.console-history
+.id
 
 # ---------------------------------------------------------------------------
 # Environment & secrets

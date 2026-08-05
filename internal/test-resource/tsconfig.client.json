@@ -1,0 +1,4 @@
+{
+  "extends": "@noverna/tsconfig/fivem-client.json",
+  "include": ["src/client.ts", "src/client/**/*.ts", "src/shared/**/*.ts"]
+}

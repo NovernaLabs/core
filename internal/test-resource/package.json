@@ -1,0 +1,26 @@
+{
+  "name": "@noverna/test-resource",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Scratch resource for exercising @noverna/core against a live FXServer. Never published.",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "dev": "node build.mjs --watch",
+    "smoke": "node build.mjs && node smoke.mjs",
+    "test": "node build.mjs && node smoke.mjs",
+    "typecheck": "tsc -p tsconfig.client.json --noEmit && tsc -p tsconfig.server.json --noEmit",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "dependencies": {
+    "@noverna/core": "workspace:*"
+  },
+  "devDependencies": {
+    "@citizenfx/client": "catalog:",
+    "@citizenfx/server": "catalog:",
+    "@noverna/bundler": "workspace:*",
+    "@noverna/tsconfig": "workspace:*",
+    "typescript": "catalog:"
+  }
+}
