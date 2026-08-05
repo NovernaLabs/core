@@ -13,7 +13,7 @@ catalog:
   "@citizenfx/server": 2.0.34303-1
   tsdown: ^0.22.14
   rolldown: ^1.2.2
-  magic-string: ^0.30.21
+  magic-string: ^1.1.0
   "@biomejs/biome": ^2.5.6
   lefthook: ^2.1.10
   turbo: ^2.10.8
