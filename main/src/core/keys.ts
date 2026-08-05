@@ -1,0 +1,11 @@
+export const INJECTABLE = Symbol.for('noverna:injectable');
+export const INJECT_PARAMS = Symbol.for('noverna:inject-params');
+export const OPTIONAL_PARAMS = Symbol.for('noverna:optional-params');
+export const MODULE = Symbol.for('noverna:module');
+export const HANDLERS = Symbol.for('noverna:handlers');
+export const GUARDS = Symbol.for('noverna:guards');
+export const PIPES = Symbol.for('noverna:pipes');
+export const INTERCEPTORS = Symbol.for('noverna:interceptors');
+export const MIDDLEWARE = Symbol.for('noverna:middleware');
+export const PARAMS = Symbol.for('noverna:params');
+export const CONTROLLER_PREFIX = Symbol.for('noverna:controller-prefix');
