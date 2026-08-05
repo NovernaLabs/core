@@ -1,0 +1,19 @@
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.cmd text eol=crlf
+*.ps1 text eol=crlf
+
+*.png binary
+*.jpg binary
+*.webp binary
+*.ico binary
+*.ytd binary
+*.ydr binary
+*.yft binary
+*.ymt binary
+
+pnpm-lock.yaml linguist-generated=true -diff
+*.tsbuildinfo linguist-generated=true -diff
+CHANGELOG.md merge=union
+web/docs/** linguist-documentation=true

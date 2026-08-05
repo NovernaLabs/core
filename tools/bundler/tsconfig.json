@@ -1,0 +1,4 @@
+{
+  "extends": "@noverna/tsconfig/library.json",
+  "include": ["src/**/*.ts"]
+}

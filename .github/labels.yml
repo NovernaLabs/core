@@ -1,0 +1,76 @@
+# Import with:
+#   npx github-label-sync --access-token "$GITHUB_TOKEN" --labels .github/labels.yml <owner>/<repo>
+
+# --- Type ---------------------------------------------------------------------
+- name: "type: bug"
+  color: "d73a4a"
+  description: Something is broken
+- name: "type: feature"
+  color: "0e8a16"
+  description: New capability
+- name: "type: docs"
+  color: "0075ca"
+  description: Documentation only
+- name: "type: refactor"
+  color: "c2e0c6"
+  description: Internal change, no behaviour change
+- name: "type: dependencies"
+  color: "ededed"
+  description: Dependency updates
+- name: "type: security"
+  color: "b60205"
+  description: Security-relevant
+
+# --- Area ---------------------------------------------------------------------
+- name: "area: core"
+  color: "5319e7"
+  description: main/ - @noverna/core
+- name: "area: packages"
+  color: "6f42c1"
+  description: packages/ - adapters
+- name: "area: internal"
+  color: "a371f7"
+  description: internal/ - dev harness
+- name: "area: tools"
+  color: "bfd4f2"
+  description: tools/ - build tooling
+- name: "area: ci"
+  color: "d4c5f9"
+  description: Workflows and repository config
+
+# --- Status -------------------------------------------------------------------
+- name: "status: needs triage"
+  color: "fbca04"
+  description: Not yet looked at
+- name: "status: needs repro"
+  color: "fef2c0"
+  description: Waiting for a minimal reproduction
+- name: "status: accepted"
+  color: "0e8a16"
+  description: Agreed and ready to be worked on
+- name: "status: blocked"
+  color: "e99695"
+  description: Waiting on something else
+- name: "status: stale"
+  color: "cfd3d7"
+  description: No activity, will be closed
+
+# --- Meta ---------------------------------------------------------------------
+- name: "breaking"
+  color: "b60205"
+  description: Contains a breaking change
+- name: "no-changeset"
+  color: "ededed"
+  description: Intentionally has no changeset
+- name: "release"
+  color: "0e8a16"
+  description: Release automation
+- name: "good first issue"
+  color: "7057ff"
+  description: Good entry point for a new contributor
+- name: "help wanted"
+  color: "008672"
+  description: Maintainers would welcome a PR
+- name: "pinned"
+  color: "ffffff"
+  description: Never auto-close

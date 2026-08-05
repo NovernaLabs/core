@@ -1,0 +1,71 @@
+name: 🔌 Adapter proposal
+description: Propose a new first-party adapter package (database, cache, transport, ...).
+title: "feat(packages): add <name> adapter"
+labels: ["type: feature", "area: packages", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        First-party adapters are maintained by us forever, so we are deliberately
+        conservative about adding them. A community adapter published under your own scope
+        needs no approval at all  it just has to implement the port from `@noverna/core`.
+        We will link good community adapters from the docs.
+
+  - type: input
+    id: name
+    attributes:
+      label: Proposed package name
+      placeholder: "@noverna/persistence-drizzle"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: port
+    attributes:
+      label: Which port does it implement?
+      options:
+        - "PersistenceAdapter"
+        - "CacheAdapter"
+        - "LoggerAdapter"
+        - "TelemetryAdapter"
+        - "A new port that does not exist yet"
+    validations:
+      required: true
+
+  - type: textarea
+    id: rationale
+    attributes:
+      label: Why should this be first-party?
+      description: |
+        What makes it worth us maintaining rather than living in the community? Adoption
+        numbers, a gap in the current adapters, or a hard requirement of the gamemode are
+        all good answers.
+    validations:
+      required: true
+
+  - type: textarea
+    id: gaps
+    attributes:
+      label: Does the port cover everything this backend needs?
+      description: |
+        If the answer is "no, we'd need to add X to the interface", say so here  that is a
+        change to `@noverna/core` and needs its own discussion.
+    validations:
+      required: true
+
+  - type: input
+    id: testing
+    attributes:
+      label: How is it tested in CI?
+      description: "Which service container / test database does it need?"
+      placeholder: "postgres:17 service container"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: ownership
+    attributes:
+      label: Ownership
+      options:
+        - label: I am willing to implement it
+        - label: I am willing to be listed in CODEOWNERS and maintain it

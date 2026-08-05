@@ -1,0 +1,75 @@
+name: ✨ Feature request
+description: An accepted idea that is ready to be built. Discuss it first.
+title: "feat: "
+labels: ["type: feature", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Start in [Discussions → Ideas](https://github.com/novernalabs/core/discussions/categories/ideas)**
+        unless a maintainer has already asked you to open an issue. Ideas get shaped there;
+        this tracker is for work that is agreed on.
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and discussions
+          required: true
+        - label: This was discussed and a maintainer asked me to open an issue, or it is a
+            small, obviously-in-scope addition
+          required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: |
+        Describe the situation you are in, not the API you want. What are you trying to do
+        today, and what makes it awkward or impossible?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed API
+      description: "Show the code a developer would write if this existed."
+      render: typescript
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where does this belong?
+      options:
+        - "@noverna/core  it is framework-level"
+        - "A new adapter package"
+        - "An existing adapter package"
+        - "The gamemode resource"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives you considered
+      description: "Including 'do it in userland'  why is that not good enough?"
+
+  - type: dropdown
+    id: breaking
+    attributes:
+      label: Would this break existing code?
+      options: ["No", "Yes", "Not sure"]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to open a pull request for this

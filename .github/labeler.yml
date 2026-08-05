@@ -1,0 +1,20 @@
+# Used by .github/workflows/labeler.yml (actions/labeler v5 syntax).
+"area: core":
+  - changed-files:
+      - any-glob-to-any-file: "main/**"
+
+"area: packages":
+  - changed-files:
+      - any-glob-to-any-file: "packages/**"
+
+"area: internal":
+  - changed-files:
+      - any-glob-to-any-file: "internal/**"
+
+"area: tools":
+  - changed-files:
+      - any-glob-to-any-file: ["tools/**", "turbo.json", "tsconfig.base.json", "biome.json"]
+
+"area: ci":
+  - changed-files:
+      - any-glob-to-any-file: [".github/**", "lefthook.yml"]

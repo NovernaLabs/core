@@ -1,0 +1,17 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 💬 Question / "how do I...?"
+    url: https://github.com/novernalabs/core/discussions/categories/q-a
+    about: Usage questions belong in Discussions, not the issue tracker.
+  - name: 💡 Feature idea
+    url: https://github.com/novernalabs/core/discussions/categories/ideas
+    about: Propose and discuss an idea first. Accepted ideas become issues.
+  - name: 📚 Documentation
+    url: https://docs.noverna.dev
+    about: Guides, API reference and the adapter contract.
+  - name: 🛡️ Security vulnerability
+    url: https://github.com/novernalabs/core/security/advisories/new
+    about: Report privately. Never open a public issue for a vulnerability.
+  - name: 🗨️ Discord
+    url: https://discord.gg/noverna
+    about: Real-time chat with other developers and maintainers.

@@ -1,0 +1,75 @@
+name: PR checks
+
+# `pull_request` (not `pull_request_target`) on purpose: these jobs check out and
+# run code from the PR branch, including forks. `pull_request_target` would hand
+# that untrusted code a write-scoped token.
+on:
+  pull_request:
+    types: [opened, edited, reopened, synchronize, labeled, unlabeled]
+    branches: [main]
+
+concurrency:
+  group: pr-checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  # ---------------------------------------------------------------------------
+  title:
+    name: Conventional PR title
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - uses: amannn/action-semantic-pull-request@v5
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          types: |
+            feat
+            fix
+            perf
+            refactor
+            docs
+            test
+            build
+            ci
+            chore
+            revert
+          scopes: |
+            core
+            persistence
+            prisma
+            drizzle
+            typeorm
+            resource
+            internal
+            docs
+            landing
+            telemetry
+            tools
+            deps
+            deps-dev
+            release
+          requireScope: false
+          subjectPattern: ^(?![A-Z])(?!.*\.$).+$
+          subjectPatternError: |
+            The subject "{subject}" is not formatted correctly.
+            It must start with a lowercase letter and must not end with a period.
+
+              feat(core): add typed RPC between client and server
+
+  # ---------------------------------------------------------------------------
+  size:
+    name: Bundle size
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./.github/actions/setup
+      - run: pnpm build:packages
+      - name: Report bundle size
+        run: node tools/scripts/report-size.mjs >> "$GITHUB_STEP_SUMMARY"

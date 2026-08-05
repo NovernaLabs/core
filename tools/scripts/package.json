@@ -1,0 +1,8 @@
+{
+  "name": "@noverna/scripts",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Repository maintenance scripts. Run from the repo root, never published.",
+  "license": "MIT"
+}

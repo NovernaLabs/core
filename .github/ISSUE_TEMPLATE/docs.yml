@@ -1,0 +1,41 @@
+name: 📚 Documentation
+description: Something in the docs is wrong, missing, or confusing.
+title: "docs: "
+labels: ["type: docs", "status: needs triage"]
+body:
+  - type: input
+    id: location
+    attributes:
+      label: Where?
+      description: "URL on docs.noverna.dev, or a path in this repository."
+      placeholder: "https://docs.noverna.dev/adapters/persistence"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What kind of problem?
+      options:
+        - "Wrong  the docs say something that is not true"
+        - "Missing  there is nothing about this"
+        - "Confusing  technically correct but I could not follow it"
+        - "Outdated example  the code no longer compiles or runs"
+        - "Typo / formatting"
+    validations:
+      required: true
+
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: "What did you expect to find, and what did you find instead?"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I am willing to open a pull request for this

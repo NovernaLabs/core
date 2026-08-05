@@ -1,0 +1,28 @@
+# Code owners are requested for review automatically and are required approvers
+# under branch protection on `main`. Last matching pattern wins.
+#
+# Replace the placeholder teams/handles before enabling branch protection.
+
+# Default owner for everything not matched below.
+*                           @novernalabs/maintainers
+
+# The framework itself  highest bar, core team only.
+/main/                      @novernalabs/core-team
+
+# Adapters. Individual adapter owners can be added per directory.
+/packages/                  @novernalabs/core-team
+/packages/persistence-*/    @novernalabs/persistence-team
+
+# Local dev harness  low risk, any maintainer.
+/internal/                  @novernalabs/maintainers
+
+# Build tooling and shared config.
+/tools/                     @novernalabs/core-team
+
+# Anything that can publish, deploy, or change the trust boundary of the repo.
+/.github/                   @novernalabs/maintainers
+/.github/workflows/         @novernalabs/core-team
+/pnpm-workspace.yaml        @novernalabs/core-team
+/turbo.json                 @novernalabs/core-team
+/tsconfig.base.json         @novernalabs/core-team
+/LICENSE                    @novernalabs/maintainers

@@ -1,0 +1,23 @@
+{
+  "name": "@noverna/bundler",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "tsdown wrapper that produces FiveM-compatible client and server bundles.",
+  "license": "MIT",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "rolldown": "catalog:",
+    "tsdown": "catalog:"
+  },
+  "devDependencies": {
+    "@noverna/tsconfig": "workspace:*",
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

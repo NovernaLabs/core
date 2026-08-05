@@ -1,0 +1,58 @@
+version: 2
+updates:
+  # ---------------------------------------------------------------------------
+  # npm one grouped PR per ecosystem slice, weekly, so review stays cheap.
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: npm
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+      time: "06:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 8
+    versioning-strategy: increase-if-necessary
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
+    labels:
+      - "type: dependencies"
+      - "no-changeset"
+    groups:
+      types:
+        patterns: ["@types/*"]
+      biome:
+        patterns: ["@biomejs/*"]
+      turbo:
+        patterns: ["turbo", "turbo-*"]
+      vitest:
+        patterns: ["vitest", "@vitest/*"]
+      build-tooling:
+        patterns: ["tsdown", "rolldown", "esbuild", "typescript"]
+      orm:
+        patterns: ["prisma", "@prisma/*", "drizzle-orm", "drizzle-kit", "typeorm"]
+      minor-and-patch:
+        update-types: ["minor", "patch"]
+    ignore:
+      # FiveM typings track the server artifact, not semver. Bump these by hand
+      # when we move the supported FXServer build.
+      - dependency-name: "@citizenfx/*"
+
+  # ---------------------------------------------------------------------------
+  # GitHub Actions. Workflows use major tags today; once you pin them to commit
+  # SHAs (recommended, see .github/workflows/README.md) this is what unpins them.
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    commit-message:
+      prefix: "ci(deps)"
+    labels:
+      - "type: dependencies"
+      - "area: ci"
+      - "no-changeset"
+    groups:
+      actions:
+        patterns: ["*"]

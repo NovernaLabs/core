@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Noverna FiveM Server",
+  "extends": "./base.json",
+  "compilerOptions": {
+    // FXServer's server runtime is Node-based, so built-ins are available.
+    "lib": ["ES2024"],
+    "types": ["@citizenfx/server", "node"]
+  }
+}

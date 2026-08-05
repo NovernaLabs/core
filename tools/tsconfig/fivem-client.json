@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Noverna FiveM Client",
+  "extends": "./base.json",
+  "compilerOptions": {
+    // The client runs in the game's V8. No Node built-ins, no `process`, no `fs`.
+    // Deliberately omitting "node" from `types` turns "I'll just import fs" into a
+    // compile error instead of a runtime crash in production.
+    "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    "types": ["@citizenfx/client"]
+  }
+}

@@ -1,0 +1,100 @@
+name: 🐛 Bug report
+description: Something in the framework, an adapter, or the gamemode is broken.
+title: "bug: "
+labels: ["type: bug", "status: needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to file this.
+
+        **Before you continue:** if this is a security vulnerability, close this and follow
+        [SECURITY.md](https://github.com/novernalabs/noverna-framework/blob/main/SECURITY.md)
+        instead. If you are not sure whether it is a bug or a usage question, ask in
+        [Discussions](https://github.com/novernalabs/noverna-framework/discussions/categories/q-a).
+
+  - type: checkboxes
+    id: preflight
+    attributes:
+      label: Preflight
+      options:
+        - label: I searched existing issues and this is not a duplicate
+          required: true
+        - label: I reproduced this on the latest release of the affected package
+          required: true
+        - label: I reproduced this with an unmodified copy of the framework
+          required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Affected area
+      options:
+        - "@noverna/core (main/)"
+        - "Persistence adapter (packages/persistence-*)"
+        - "Another package (packages/*)"
+        - "Build tooling (tools/)"
+        - "Documentation"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: input
+    id: package-version
+    attributes:
+      label: Package version
+      description: "Output of `npm ls @noverna/core`, or the gamemode release tag."
+      placeholder: "@noverna/core@0.4.2"
+    validations:
+      required: true
+
+  - type: input
+    id: fxserver
+    attributes:
+      label: FXServer build
+      description: "The build number from your server console on startup."
+      placeholder: "13068"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What actually happened?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      description: |
+        The smallest resource that still shows the problem. A link to a repository is
+        ideal. "It happens on my server" is not reproducible and will be closed.
+      placeholder: |
+        1. Create a resource with `@noverna/core@0.4.2`
+        2. Register a net event with ...
+        3. Trigger it from the client with ...
+        4. Server throws ...
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console output / stack trace
+      description: "Paste as text, not a screenshot. Redact tokens, IPs and licence keys."
+      render: shell
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Anything else?
+      description: "Other resources in play, what you already ruled out, workarounds you found."
