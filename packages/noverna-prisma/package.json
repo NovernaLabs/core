@@ -1,0 +1,64 @@
+{
+  "name": "@noverna/persistence-prisma",
+  "version": "0.0.0",
+  "description": "Prisma persistence adapter for the Noverna Framework.",
+  "keywords": [
+    "fivem",
+    "noverna",
+    "prisma",
+    "persistence",
+    "adapter"
+  ],
+  "license": "MIT",
+  "author": "Noverna Labs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/novernalabs/core.git",
+    "directory": "packages/persistence-prisma"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md",
+    "CHANGELOG.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=26.0.0"
+  },
+  "scripts": {
+    "build": "tsdown",
+    "dev": "tsdown --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
+  },
+  "peerDependencies": {
+    "@noverna/core": "workspace:^",
+    "@prisma/client": ">=7"
+  },
+  "devDependencies": {
+    "@noverna/core": "workspace:*",
+    "@noverna/tsconfig": "workspace:*",
+    "@prisma/client": "^7.9.1",
+    "@types/node": "catalog:",
+    "prisma": "^7.9.1",
+    "tsdown": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  }
+}
