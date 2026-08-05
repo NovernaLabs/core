@@ -1,4 +1,0 @@
-{
-  "extends": "@noverna/tsconfig/fivem-server.json",
-  "include": ["src/server.ts", "src/server/**/*.ts", "src/shared/**/*.ts", "build.mjs"]
-}

@@ -1,0 +1,18 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/server/generated/prisma"
+  runtime  = "nodejs"
+  // The resource bundle is IIFE, so `import.meta.url` is not available at runtime.
+  // Without this, Prisma emits an ESM-only __dirname shim that throws on load.
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model test_account {
+  id        String   @id @default(cuid())
+  license   String
+  createdAt DateTime @default(now())
+}

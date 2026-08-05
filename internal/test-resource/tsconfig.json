@@ -1,4 +1,7 @@
 {
   "files": [],
-  "references": [{ "path": "./tsconfig.client.json" }, { "path": "./tsconfig.server.json" }]
+  "references": [
+    { "path": "./src/client/tsconfig.client.json" },
+    { "path": "./src/server/tsconfig.server.json" }
+  ]
 }

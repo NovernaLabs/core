@@ -10,11 +10,17 @@
     "dev": "node build.mjs --watch",
     "smoke": "node build.mjs && node smoke.mjs",
     "test": "node build.mjs && node smoke.mjs",
-    "typecheck": "tsc -p tsconfig.client.json --noEmit && tsc -p tsconfig.server.json --noEmit",
+    "typecheck": "tsc -p src/client/tsconfig.client.json --noEmit && tsc -p src/server/tsconfig.server.json --noEmit",
     "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\""
   },
   "dependencies": {
-    "@noverna/core": "workspace:*"
+    "@noverna/core": "workspace:*",
+    "@noverna/persistence-prisma": "workspace:*",
+    "@prisma/adapter-pg": "^7.9.1",
+    "@prisma/client": "^7.9.1",
+    "dotenv": "^17.4.2",
+    "pg": "^8.22.0",
+    "prisma": "^7.9.1"
   },
   "devDependencies": {
     "@citizenfx/client": "catalog:",
