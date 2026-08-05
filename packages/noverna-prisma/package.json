@@ -1,6 +1,6 @@
 {
   "name": "@noverna/persistence-prisma",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Prisma persistence adapter for the Noverna Framework.",
   "keywords": [
     "fivem",
@@ -14,7 +14,7 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/novernalabs/core.git",
-    "directory": "packages/persistence-prisma"
+    "directory": "packages/noverna-prisma"
   },
   "type": "module",
   "sideEffects": false,
