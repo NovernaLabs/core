@@ -3,6 +3,12 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["*.ts", "tools/scripts/**/*.mjs"],
+  "include": [
+    "*.ts",
+    "tools/scripts/**/*.mjs",
+    "packages/**/*.ts",
+    "internal/test-resource/**/*.ts",
+    "main/**/*.ts"
+  ],
   "exclude": ["node_modules", "**/dist", "**/build", "**/.turbo"]
 }
