@@ -1,7 +1,5 @@
 import { createToken, type MaybePromise } from '../shared';
-
-// Temp Type, until we have a dedicated type for it.
-type SharedPlayer = any;
+import type { SharedPlayer } from './player/shared.player';
 
 export const RESOURCE_NAME = createToken<string>('RESOURCE_NAME');
 export const RUNTIME_SIDE = createToken<'server' | 'client'>('RUNTIME_SIDE');
