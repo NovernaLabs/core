@@ -2,7 +2,7 @@ import { type Ctor, createToken, type MaybePromise, type Token } from '../shared
 import { Container } from './di/container';
 import type { Provider } from './di/types';
 import { ExceptionHandler } from './errors/exception.handler';
-import { LifecycleException } from './errors/exceptions';
+import { LifecycleException, PersistenceException } from './errors/exceptions';
 import { EventBus } from './events/event.bus';
 import type {
   CanActivate,
@@ -20,6 +20,8 @@ import { hasHook, LifecyclePhase } from './lifecycle/hook';
 import { Logger, type LoggerTransport, LogLevel } from './logging/logger';
 import { MetricsProvider, NoopMetricsProvider } from './metrics/metrics';
 import { ModuleRef, ModuleRegistry } from './modules/module.registry';
+import { withMainThreadResume } from './persistence/main.thread';
+import { PersistenceAdapter } from './persistence/port';
 import type { SharedPlayer } from './player/shared.player';
 import { Scheduler, type SchedulerRuntime } from './scheduler/scheduler';
 import {
@@ -36,7 +38,7 @@ export interface ApplicationOptions {
   logLevel?: LogLevel;
   metrics?: MetricsProvider;
   playerClass?: Ctor<SharedPlayer>;
-  //   persistence?: PersistenceAdapter; Comes later on
+  persistence?: PersistenceAdapter;
   mainThreadPersistence?: boolean;
   providers?: readonly Provider[];
   schedulerRuntime?: SchedulerRuntime;
@@ -54,7 +56,7 @@ export abstract class Application {
   readonly #registry: ModuleRegistry;
   readonly #bindings: HandlerBinding[] = [];
   readonly #eventSubscriptions: (() => void)[] = [];
-  //   readonly #persistence: PersistenceAdapter | undefined;
+  readonly #persistence: PersistenceAdapter | undefined;
   #rootModule: Ctor | undefined;
   #playerClass: Ctor<SharedPlayer> | undefined;
   #phase: LifecyclePhase = LifecyclePhase.Created;
@@ -79,11 +81,10 @@ export abstract class Application {
       playerResolver: undefined,
     });
 
-    /// @TODO @Code-Pumba - Needs to be Adressed later, we used custom adapter, will arrive shortly.
-    // this.#persistence =
-    //   options.persistence && (options.mainThreadPersistence ?? true)
-    //     ? withMainThreadResume(options.persistence, mainThread)
-    //     : options.persistence;
+    this.#persistence =
+      options.persistence && (options.mainThreadPersistence ?? true)
+        ? withMainThreadResume(options.persistence, mainThread)
+        : options.persistence;
 
     this.scheduler = new Scheduler(this.pipeline, this.logger, options.schedulerRuntime);
     this.#registry = new ModuleRegistry(this.container);
@@ -110,9 +111,7 @@ export abstract class Application {
     }
 
     const started = Date.now();
-
-    /// @TODO @Code-Pumba - Same as alaways, needs to be rearanged to fit to the public
-    // await this.#connectPersistence();
+    await this.#connectPersistence();
 
     this.#registry.register(this.#rootModule);
 
@@ -155,7 +154,7 @@ export abstract class Application {
       this.#eventSubscriptions.length = 0;
       this.events.removeAllListeners();
       await this.container.dispose();
-      //   await this.#disconnectPersistence();
+      await this.#disconnectPersistence();
       this.#phase = LifecyclePhase.Disposed;
       this.logger.info(`${this.resourceName} stopped`, { reason });
     }
@@ -173,9 +172,9 @@ export abstract class Application {
     return this.#registry.modules;
   }
 
-  //   public get persistence(): PersistenceAdapter | undefined {
-  //     return this.#persistence;
-  //   }
+  public get persistence(): PersistenceAdapter | undefined {
+    return this.#persistence;
+  }
 
   public registerRootModule(module: Ctor): this {
     this.#assertPhase(LifecyclePhase.Created, 'registerRootModule');
@@ -189,12 +188,10 @@ export abstract class Application {
     return this;
   }
 
-  /** The player class in use, once configured. */
   public get playerClass(): Ctor<SharedPlayer> | undefined {
     return this.#playerClass;
   }
 
-  /** Adds application-wide middleware, which runs before guards on every handler. */
   public use(...middleware: PipelineRef<Middleware>[]): this {
     this.pipeline.useMiddleware(...middleware);
     return this;
@@ -230,7 +227,6 @@ export abstract class Application {
     return this;
   }
 
-  /** Registers a provider on the root container, where every module can see it. */
   public provide(...providers: Provider[]): this {
     this.container.registerMany(providers);
     return this;
@@ -254,40 +250,39 @@ export abstract class Application {
       .seed(RESOURCE_NAME, this.resourceName)
       .seed(RUNTIME_SIDE, this.side);
 
-    // if (this.#persistence)
-    //   this.container.seed(PersistenceAdapter, this.#persistence);
+    if (this.#persistence) this.container.seed(PersistenceAdapter, this.#persistence);
 
     this.registerRuntimeProviders();
     if (this.options.providers) this.container.registerMany(this.options.providers);
   }
 
-  //   async #connectPersistence(): Promise<void> {
-  //     if (!this.#persistence) return;
+  async #connectPersistence(): Promise<void> {
+    if (!this.#persistence) return;
 
-  //     try {
-  //       await this.#persistence.connect();
-  //     } catch (error) {
-  //       throw new PersistenceException(
-  //         `The persistence adapter failed to connect, so the resource cannot start: ${error instanceof Error ? error.message : String(error)}`,
-  //         { cause: error },
-  //       );
-  //     }
+    try {
+      await this.#persistence.connect();
+    } catch (error) {
+      throw new PersistenceException(
+        `The persistence adapter failed to connect, so the resource cannot start: ${error instanceof Error ? error.message : String(error)}`,
+        { cause: error },
+      );
+    }
 
-  //     if (!this.#persistence.capabilities.transactions) {
-  //       this.logger.warn(
-  //         "The persistence adapter reports no transaction support. transaction() will run the callback, but a failure part way through leaves earlier writes in place.",
-  //       );
-  //     }
-  //   }
+    if (!this.#persistence.capabilities.transactions) {
+      this.logger.warn(
+        'The persistence adapter reports no transaction support. transaction() will run the callback, but a failure part way through leaves earlier writes in place.',
+      );
+    }
+  }
 
-  //   async #disconnectPersistence(): Promise<void> {
-  //     if (!this.#persistence) return;
-  //     try {
-  //       await this.#persistence.disconnect();
-  //     } catch (error) {
-  //       this.logger.error("Persistence adapter failed to disconnect", error);
-  //     }
-  //   }
+  async #disconnectPersistence(): Promise<void> {
+    if (!this.#persistence) return;
+    try {
+      await this.#persistence.disconnect();
+    } catch (error) {
+      this.logger.error('Persistence adapter failed to disconnect', error);
+    }
+  }
 
   async #instantiateProviders(): Promise<void> {
     for (const moduleRef of this.#registry.modules) {
@@ -299,9 +294,6 @@ export abstract class Application {
 
   #collectHandlerBindings(): void {
     for (const moduleRef of this.#registry.modules) {
-      // Controllers are the documented home for handlers, but a provider is allowed to have
-      // them too — plenty of small resources have one service that also listens to an event,
-      // and refusing that would be pedantry.
       const classes = new Set<Ctor>([...moduleRef.controllers, ...providerClasses(moduleRef)]);
 
       for (const target of classes) {
@@ -346,7 +338,6 @@ export abstract class Application {
           break;
         case HandlerKind.ResourceStart:
         case HandlerKind.ResourceStop:
-          // Driven directly by start()/stop(); nothing to bind with the runtime.
           break;
         default:
           this.logger.warn(`Unhandled handler kind "${binding.kind}" on ${binding.id}`);
