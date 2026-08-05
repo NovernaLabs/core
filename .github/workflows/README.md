@@ -17,10 +17,14 @@ Do these once, before the first release.
 
 | Secret                    | Used by       | Notes                                                                          |
 | ------------------------- | ------------- | ------------------------------------------------------------------------------ |
-| `NPM_TOKEN`               | `release.yml` | npm **automation** token with publish rights on the `@noverna` scope           |
 | `DISCORD_RELEASE_WEBHOOK` | `release.yml` | Optional. Also set the repo variable `DISCORD_RELEASE_WEBHOOK_CONFIGURED=true` |
 
 `GITHUB_TOKEN` is provided automatically - do not create one.
+
+Publishing needs no npm token. `release.yml` authenticates with npm through OIDC
+trusted publishing, configured per package under Settings on npmjs.com: provider
+GitHub Actions, repository `NovernaLabs/core`, workflow `release.yml`. The job only
+needs `id-token: write` for that.
 
 ### Settings → Actions
 
