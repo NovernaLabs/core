@@ -24,7 +24,7 @@ jobs:
     name: Lint & format
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - name: Biome
         run: pnpm exec biome ci .
@@ -34,7 +34,7 @@ jobs:
     name: Typecheck
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm turbo run typecheck
 
@@ -49,14 +49,14 @@ jobs:
         # when it lands, and only promote it once the artifact actually moves.
         node: ["26"]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
         with:
           node-version: ${{ matrix.node }}
       - run: pnpm turbo run test -- --coverage
       - name: Upload coverage
         if: matrix.node == '26'
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: coverage
           path: coverage/
@@ -71,7 +71,7 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm turbo run build
 
@@ -80,7 +80,7 @@ jobs:
     name: Architecture boundaries
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - name: Nothing published may depend on internal/
         run: node tools/scripts/check-boundaries.mjs
@@ -90,7 +90,7 @@ jobs:
     name: Publish dry run
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: ./.github/actions/setup
       - run: pnpm build:packages
       - name: Pack every publishable package
