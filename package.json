@@ -8,7 +8,7 @@
   "homepage": "https://github.com/novernalabs/core#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/novernalabs/core.git"
+    "url": "https://github.com/novernalabs/core"
   },
   "bugs": {
     "url": "https://github.com/novernalabs/core/issues"
