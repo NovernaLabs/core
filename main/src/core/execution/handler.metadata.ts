@@ -10,6 +10,7 @@ import type { CanActivate, Interceptor, Middleware, PipelineRef, PipeTransform }
 
 export const HandlerKind = {
   Event: 'event',
+  RuntimeEvent: 'runtime-event',
   NetEvent: 'net-event',
   NuiEvent: 'nui-event',
   StateBag: 'state-bag',
@@ -30,6 +31,7 @@ export interface HandlerOptions {
   intervalMs?: number;
   expression?: string;
   withPlayer?: boolean;
+  deferrals?: boolean;
 }
 
 export interface HandlerDeclaration {
@@ -51,24 +53,10 @@ export function collectHandlers(target: Ctor): HandlerDeclaration[] {
   return getMetadataChain<HandlerDeclaration>(HANDLERS, target);
 }
 
-/*
- *
- * @OnNetEvent('admin:execute')
- * @UseGuards(AdminGuard)
- * public async execute(player: MyPlayer) {}
- *
- */
 export function UseGuards(...guards: PipelineRef<CanActivate>[]): ClassDecorator & MethodDecorator {
   return attach(GUARDS, guards);
 }
 
-/*
- *
- * @OnNetEvent('inventory:move')
- * @UsePipes(ValidationPipe)
- * public async move(player: MyPlayer, data: MoveItemDto) {}
- *
- */
 export function UsePipes(...pipes: PipelineRef<PipeTransform>[]): ClassDecorator & MethodDecorator {
   return attach(PIPES, pipes);
 }

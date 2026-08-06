@@ -1,6 +1,6 @@
 {
   "name": "@noverna/core",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A TypeScript-first framework for FiveM Enhanced, typed events, DI, and swappable persistence.",
   "keywords": [
     "fivem",

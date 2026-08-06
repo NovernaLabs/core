@@ -108,6 +108,26 @@ export class ClientApplication extends Application {
     });
   }
 
+  protected override registerRuntimeEvent(binding: HandlerBinding): void {
+    const event = binding.options.name ?? '';
+
+    if (binding.options.deferrals) {
+      this.logger.warn(
+        `${binding.id} declares @OnPlayerConnecting(), which only exists on the server. The handler will never fire on the client.`,
+      );
+      return;
+    }
+
+    on(event, (...args: unknown[]) => {
+      void this.pipeline.dispatch(binding, {
+        type: ExecutionType.RuntimeEvent,
+        name: event,
+        args,
+        ...(binding.options.withPlayer ? { player: this.localPlayer } : {}),
+      });
+    });
+  }
+
   protected override registerNuiEvent(binding: HandlerBinding): void {
     const name = binding.options.name ?? '';
     // RegisterNuiCallback(name, (data: unknown, cb: unknown) => {

@@ -4,6 +4,7 @@ import type { SharedPlayer } from '../player/shared.player';
 
 export const ExecutionType = {
   LocalEvent: 'local-event',
+  RuntimeEvent: 'runtime-event',
   NetEvent: 'net-event',
   NuiEvent: 'nui-event',
   StateBag: 'state-bag',

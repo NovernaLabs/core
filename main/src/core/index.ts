@@ -16,12 +16,15 @@ export {
   OnGlobalStateBagChange,
   OnNetEvent,
   OnNuiEvent,
+  OnPlayerConnecting,
   OnResourceStart,
   OnResourceStop,
+  OnRuntimeEvent,
   OnStateBagChange,
   Patch,
   Post,
   Put,
+  type RuntimeEventOptions,
   Tick,
 } from './decorators/handlers';
 
@@ -64,6 +67,7 @@ export {
   PlayerNotFoundException,
   ValidationException,
 } from './errors/exceptions';
+export type { Deferrals } from './events/deferrals';
 // Events
 export {
   EventBus,

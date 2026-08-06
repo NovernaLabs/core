@@ -310,6 +310,9 @@ export abstract class Application {
         case HandlerKind.Event:
           this.#bindLocalEvent(binding);
           break;
+        case HandlerKind.RuntimeEvent:
+          this.registerRuntimeEvent(binding);
+          break;
         case HandlerKind.NetEvent:
           this.registerNetEvent(binding);
           break;
@@ -404,6 +407,8 @@ export abstract class Application {
   protected abstract createDefaultLogTransport(): LoggerTransport;
 
   protected abstract registerNetEvent(binding: HandlerBinding): void;
+
+  protected abstract registerRuntimeEvent(binding: HandlerBinding): void;
 
   protected abstract registerStateBag(binding: HandlerBinding, global: boolean): void;
 

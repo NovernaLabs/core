@@ -7,6 +7,29 @@ export function OnEvent(event: string): MethodDecorator {
   };
 }
 
+export interface RuntimeEventOptions {
+  withPlayer?: boolean;
+}
+
+export function OnRuntimeEvent(event: string, options: RuntimeEventOptions = {}): MethodDecorator {
+  return (target, propertyKey) => {
+    declareHandler(target, propertyKey, HandlerKind.RuntimeEvent, {
+      name: event,
+      withPlayer: options.withPlayer ?? false,
+    });
+  };
+}
+
+export function OnPlayerConnecting(): MethodDecorator {
+  return (target, propertyKey) => {
+    declareHandler(target, propertyKey, HandlerKind.RuntimeEvent, {
+      name: 'playerConnecting',
+      withPlayer: false,
+      deferrals: true,
+    });
+  };
+}
+
 export interface NetEventOptions {
   withPlayer?: boolean; // opt-out for server->server com, if you dont need a Player
 }

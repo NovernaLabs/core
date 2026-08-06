@@ -1,6 +1,7 @@
 import {
   Application,
   type ApplicationOptions,
+  type Deferrals,
   ExecutionType,
   type HandlerBinding,
   LifecyclePhase,
@@ -101,6 +102,59 @@ export class ServerApplication extends Application {
         args,
         source,
       });
+    });
+  }
+
+  protected override registerRuntimeEvent(binding: HandlerBinding): void {
+    const event = binding.options.name ?? '';
+
+    if (binding.options.deferrals) {
+      this.#registerDeferredEvent(binding, event);
+      return;
+    }
+
+    on(event, (...args: unknown[]) => {
+      const source = global.source as number | undefined;
+      void this.pipeline.dispatch(binding, {
+        type: ExecutionType.RuntimeEvent,
+        name: event,
+        args,
+        ...(typeof source === 'number' && Number.isInteger(source) && source > 0 ? { source } : {}),
+      });
+    });
+  }
+
+  #registerDeferredEvent(binding: HandlerBinding, event: string): void {
+    on(event, (name: string, setKickReason: (reason: string) => void, deferrals: Deferrals) => {
+      deferrals.defer();
+
+      const source = global.source as number;
+      let settled = false;
+      const release = (reason?: string): void => {
+        if (settled) return;
+        settled = true;
+        if (reason === undefined) deferrals.done();
+        else deferrals.done(reason);
+      };
+
+      void this.pipeline
+        .dispatch(binding, {
+          type: ExecutionType.RuntimeEvent,
+          name: event,
+          args: [name, setKickReason, deferrals],
+          source,
+        })
+        .then((result) => {
+          if (result.ok) {
+            release();
+            return;
+          }
+          release(result.outcome?.message ?? 'Connection refused');
+        })
+        .catch((error: unknown) => {
+          this.logger.error(`${binding.id} threw while holding a connection`, error);
+          release('Internal error');
+        });
     });
   }
 
