@@ -33,16 +33,14 @@ jobs:
 
       - uses: ./.github/actions/setup
 
-      # Trusted publishing needs npm to own the upload, so point it at the registry.
-      # No NODE_AUTH_TOKEN here on purpose, OIDC replaces it.
-      - name: Configure npm registry
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: .nvmrc
-          registry-url: https://registry.npmjs.org
+      # Deliberately no setup-node with a registry-url here. That writes an .npmrc holding
+      # `//registry.npmjs.org/:_authToken=${NODE_AUTH_TOKEN}` and points NPM_CONFIG_USERCONFIG
+      # at it. With no token to fill in, NODE_AUTH_TOKEN keeps setup-node's literal
+      # XXXXX-XXXXX-XXXXX-XXXXX placeholder, npm treats that as credentials, skips the OIDC
+      # exchange entirely and gets rejected. npm already defaults to registry.npmjs.org.
 
-      # Trusted publishing wants npm 11.5.1+ on Node 22.14+, and provenance only works
-      # on cloud runners. Fail loudly here rather than halfway through a publish.
+      # Trusted publishing wants npm 11.5.1+ on Node 22.14+, and it only works on cloud
+      # runners. Printing this makes a version mismatch obvious in the log.
       - name: Show toolchain
         run: node -v && npm -v && pnpm -v
 
@@ -68,18 +66,28 @@ jobs:
       - name: Publish
         id: publish
         run: |
+          published=false
           for tarball in .tarballs/*.tgz; do
+            spec=$(tar -xzOf "$tarball" package/package.json \
+              | node -pe "const p = JSON.parse(require('fs').readFileSync(0, 'utf8')); p.name + '@' + p.version")
+
+            # The packages here version independently, so a release usually only moves some
+            # of them. Republishing an existing version is a hard error, which would fail
+            # the whole run over a package that simply had nothing new to ship.
+            if npm view "$spec" version >/dev/null 2>&1; then
+              echo "$spec is already on the registry, skipping."
+              continue
+            fi
+
             if [ "${{ inputs.dry_run }}" = "true" ]; then
+              echo "Would publish $spec"
               npm publish "$tarball" --access public --dry-run
             else
               npm publish "$tarball" --access public
+              published=true
             fi
           done
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            echo "published=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "published=true" >> "$GITHUB_OUTPUT"
-          fi
+          echo "published=$published" >> "$GITHUB_OUTPUT"
 
       - name: Summary
         run: |
