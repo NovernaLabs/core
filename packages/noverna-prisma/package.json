@@ -13,7 +13,7 @@
   "author": "Noverna Labs",
   "repository": {
     "type": "git",
-    "url": "https://github.com/novernalabs/core",
+    "url": "https://github.com/NovernaLabs/core",
     "directory": "packages/noverna-prisma"
   },
   "type": "module",

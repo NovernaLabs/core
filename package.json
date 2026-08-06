@@ -5,13 +5,13 @@
   "type": "module",
   "description": "Noverna Framework - a TypeScript-first framework for FiveM Enhanced.",
   "license": "MIT",
-  "homepage": "https://github.com/novernalabs/core#readme",
+  "homepage": "https://github.com/NovernaLabs/core#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/novernalabs/core"
+    "url": "https://github.com/NovernaLabs/core"
   },
   "bugs": {
-    "url": "https://github.com/novernalabs/core/issues"
+    "url": "https://github.com/NovernaLabs/core/issues"
   },
   "packageManager": "pnpm@10.32.1",
   "engines": {

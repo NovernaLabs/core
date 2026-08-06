@@ -12,14 +12,14 @@
   ],
   "license": "MIT",
   "author": "Noverna Labs",
-  "homepage": "https://github.com/novernalabs/core/tree/main/main#readme",
+  "homepage": "https://github.com/NovernaLabs/core/tree/main/main#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/novernalabs/core",
+    "url": "https://github.com/NovernaLabs/core",
     "directory": "main"
   },
   "bugs": {
-    "url": "https://github.com/novernalabs/core/issues"
+    "url": "https://github.com/NovernaLabs/core/issues"
   },
   "type": "module",
   "sideEffects": false,
