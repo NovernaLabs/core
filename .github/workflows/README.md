@@ -26,6 +26,18 @@ trusted publishing, configured per package under Settings on npmjs.com: provider
 GitHub Actions, repository `NovernaLabs/core`, workflow `release.yml`. The job only
 needs `id-token: write` for that.
 
+Each package needs its own trusted publisher entry, and **Allow npm publish** has to be
+ticked under *Allowed actions*. Leave *Environment name* empty unless the job actually
+declares an `environment:`, since npm checks that value against the OIDC claim.
+
+#### A failed publish burns the version
+
+npm writes the provenance signature to the Sigstore transparency log *before* it uploads
+([npm/cli#7654](https://github.com/npm/cli/issues/7654)), so a publish that fails on
+authentication still leaves an entry behind. Retrying the same version then dies with
+`TLOG_CREATE_ENTRY_ERROR` and a 409, because the log is append only and refuses the
+duplicate. Bump the version and run again, the old number is not recoverable.
+
 ### Settings → Actions
 
 - **Workflow permissions:** *Read repository contents and packages permissions*. Every
