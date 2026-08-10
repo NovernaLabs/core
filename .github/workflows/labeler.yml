@@ -17,7 +17,7 @@ jobs:
     steps:
       # Safe under `pull_request_target`: this action only reads the changed-file
       # list from the API. It never checks out or executes PR code.
-      - uses: actions/labeler@v5
+      - uses: actions/labeler@v7
         with:
           configuration-path: .github/labeler.yml
           sync-labels: true
