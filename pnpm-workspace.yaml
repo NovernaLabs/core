@@ -11,7 +11,7 @@ catalog:
   "@types/node": ^26.1.2
   "@citizenfx/client": 2.0.34303-1
   "@citizenfx/server": 2.0.34303-1
-  tsdown: ^0.22.14
+  tsdown: ^0.23.0
   rolldown: ^1.2.2
   magic-string: ^0.30.21
   "@biomejs/biome": ^2.5.6
